@@ -1,9 +1,10 @@
-import random
-
-import gymnasium as gym
+from typing import List
 
 from constants import *
+from crossover import one_point_crossover, should_crossover
+from individual import Individual
 from maps import *
+from mutation import mutate, should_mutate
 
 # Representation:
 # - North: 0
@@ -32,39 +33,60 @@ from maps import *
 # Elitilism
 
 # globals (related with the creation / rendering of the maze)
-RENDER_MODE = "human"
-env = gym.make(
-    "FrozenLake-v1", desc=map_4_by_4, is_slippery=False, render_mode=RENDER_MODE
-)
-observation, info = env.reset(seed=42)
 
 
-def update_ui():
-    if RENDER_MODE is not None:
-        env.render()
+def initialize_population() -> List[Individual]:
+    population = []
+    map = map_4_by_4
+
+    for _ in range(POPULATION_SIZE):
+        population.append(Individual(map))
+
+    return population
 
 
-def initialize_population():
-    # TODO: create a population of random individuals
-    return NotImplementedError
+def rank(population) -> List[Individual]:
+    """
+    Sorts the population based on their fitness, the highest fitness individuals
+    will be in the beginning of the list
+    """
+
+    population.sort(key=lambda individual: individual.fitness_value, reverse=True)
+    return population
 
 
 def main():
-    update_ui()
-
-    initialize_population()
+    population = initialize_population()
 
     for generation in range(MAX_ITERATIONS_4X4):
-        # TODO: implement action selection (each action is a 2bit bin)
-        action = random.randint(0, 3)
+        for individual in population:
+            individual.traverse_maze()
 
-        # TODO: Use this for the fitness function, etc
-        observation, reward, terminated, truncated, info = env.step(action)
+        # order population by fitness
+        population = rank(population)
 
-        update_ui()
+        # initialize next population
+        new_population = []
 
-        if terminated:
-            break
+        for _ in range(POPULATION_SIZE):
+            # TODO: tournament selection
+            new_individual = population[0]
+
+            if should_crossover():
+                # parent selection
+                # TODO: tournament selection
+                parent1 = population[0]
+                parent2 = population[1]
+                new_individual = one_point_crossover(parent1, parent2)
+
+            if should_mutate():
+                new_individual = mutate(new_individual)
+
+            new_population.append(new_individual)
+
+        # TODO: Survivor selection
+        # population = survivor_selection(population, new_population)
+        population = new_population
 
 
 if __name__ == "__main__":
