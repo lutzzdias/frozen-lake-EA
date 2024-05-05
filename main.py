@@ -32,7 +32,7 @@ from maps import *
 # Survivor Selection:
 # Elitilism
 
-# globals
+# globals (related with the creation / rendering of the maze)
 RENDER_MODE = "human"
 env = gym.make(
     "FrozenLake-v1", desc=map_4_by_4, is_slippery=False, render_mode=RENDER_MODE
@@ -46,7 +46,7 @@ def update_ui():
 
 
 def initialize_population():
-    # TODO: create a population of random phenotypes (individuals)
+    # TODO: create a population of random individuals
     return NotImplementedError
 
 
