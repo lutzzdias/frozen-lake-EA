@@ -6,21 +6,20 @@ from constants import *
 from maps import *
 
 # Representation:
-# - North: 00
-# - South: 01
-# - East: 10
-# - West: 11
+# - North: 0
+# - South: 1
+# - East: 2
+# - West: 3
 
-# [South, South, East, North, East, East, South, West, South, East, East]
-
-# Action:
-# generate a random 2 bit value (represents an action)
+# genotype_example = [0, 3, 2, 2, 1, 0, 3]
 
 # Mutation:
-# Change the position of one of the actions.
+# 1. append random decision
+# 2. delete random decision
+# 3. change random decision
 
 # Cross-over:
-# Split the representation and recombine them.
+# Single point crossover
 
 # Fitness:
 # Goal was reached or not. If it failed, how close to the goal was the agent.
