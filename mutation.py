@@ -1,27 +1,47 @@
 import random
 
+from constants import MUTATION_PROBABILITY
+from individual import Individual
 
-def should_mutate(mutation_rate):
-    return random.random() < mutation_rate
+
+def should_mutate():
+    return random.random() < MUTATION_PROBABILITY
 
 
 def append_decision(genotype):
-    # TODO: Randomly choose any other direction (can't be the same as current)
-    decision = "00"
-
+    decision = random.randint(0, 3)
     genotype.append(decision)
+    return genotype
 
+
+def delete_decision(genotype):
+    index = random.randint(0, len(genotype) - 1)
+    genotype.pop(index)
     return genotype
 
 
 def change_decision(genotype):
-    # Select random index
     index = random.randint(0, len(genotype) - 1)
+    decision = random.randint(0, 3)
 
-    # TODO: Randomly choose any other direction (can't be the same as current)
-    return NotImplementedError
+    while decision == genotype[index]:
+        decision = random.randint(0, 3)
+
+    genotype[index] = decision
+    return genotype
 
 
-def mutate(genotype, mutation_rate):
-    if should_mutate(mutation_rate):
-        change_decision(genotype)
+def mutate(individual: Individual):
+    genotype = individual.genotype
+
+    mutations = [
+        append_decision(genotype),
+        delete_decision(genotype),
+        change_decision(genotype),
+    ]
+
+    mutation = random.choice(mutations)
+    individual.genotype = mutation(genotype)
+    individual.traverse_maze()
+
+    return individual
