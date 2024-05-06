@@ -1,8 +1,6 @@
 import random
 from typing import List
 
-import gymnasium as gym
-
 from constants import GENOTYPE_MAX_SIZE, MAP, MAP_SIZE, RENDER_MODE
 
 # TODO: Check if this is useful
@@ -10,16 +8,9 @@ from constants import GENOTYPE_MAX_SIZE, MAP, MAP_SIZE, RENDER_MODE
 
 
 class Individual:
-    def __init__(self, map=MAP, genotype=None):
+    def __init__(self, genotype=None):
         self.genotype = self.initialize_genotype() if genotype is None else genotype
         self.fitness_value = None
-
-        self.env = gym.make(
-            "FrozenLake-v1",
-            desc=map,
-            is_slippery=False,
-            render_mode=RENDER_MODE,
-        )
 
     def initialize_genotype(self) -> List[int]:
         genotype = []
@@ -40,14 +31,13 @@ class Individual:
     ) -> int:
         final_position = (MAP_SIZE - 1) * MAP_SIZE + (MAP_SIZE - 1)
 
+        # TODO: Account for penalty when the individual falls on the ice
         fitness = 100 * reward + 100 / (final_position - observation)
         self.fitness_value = fitness
 
         return fitness
 
-    def traverse_maze(self):
-        env = self.env
-        # initialize ui
+    def traverse_maze(self, env):
         env.reset()
 
         for action in self.genotype:
@@ -57,7 +47,6 @@ class Individual:
             env.render()
 
             if terminated or action == self.genotype[-1]:
-                env.close()
                 return self.fitness(
                     observation,
                     reward,

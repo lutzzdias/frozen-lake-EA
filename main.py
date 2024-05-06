@@ -32,15 +32,12 @@ from mutation import mutate, should_mutate
 # Survivor Selection:
 # Elitilism
 
-# globals (related with the creation / rendering of the maze)
-
 
 def initialize_population() -> List[Individual]:
     population = []
-    map = map_4_by_4
 
     for _ in range(POPULATION_SIZE):
-        population.append(Individual(map))
+        population.append(Individual())
 
     return population
 
@@ -58,9 +55,11 @@ def rank(population) -> List[Individual]:
 def main():
     population = initialize_population()
 
-    for generation in range(MAX_ITERATIONS_4X4):
+    for gen in range(MAX_ITERATIONS_4X4):
+        print(gen)
+
         for individual in population:
-            individual.traverse_maze()
+            individual.traverse_maze(ENV)
 
         # order population by fitness
         population = rank(population)
@@ -87,6 +86,8 @@ def main():
         # TODO: Survivor selection
         # population = survivor_selection(population, new_population)
         population = new_population
+
+    ENV.close()
 
 
 if __name__ == "__main__":

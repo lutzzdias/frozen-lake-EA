@@ -1,6 +1,6 @@
 import random
 
-from constants import CROSSOVER_PROBABILITY
+from constants import CROSSOVER_PROBABILITY, ENV
 from individual import Individual
 
 
@@ -21,6 +21,6 @@ def one_point_crossover(parent1: Individual, parent2: Individual) -> Individual:
             genotype.append(parent2.genotype[gene_index])
 
     result = Individual(genotype=genotype)
-    result.traverse_maze()
+    result.traverse_maze(ENV)
 
     return result

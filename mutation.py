@@ -1,6 +1,6 @@
 import random
 
-from constants import MUTATION_PROBABILITY
+from constants import ENV, MUTATION_PROBABILITY
 from individual import Individual
 
 
@@ -41,7 +41,7 @@ def mutate(individual: Individual):
     ]
 
     mutation = random.choice(mutations)
-    individual.genotype = mutation(genotype)
-    individual.traverse_maze()
+    individual.genotype = mutation
+    individual.traverse_maze(ENV)
 
     return individual

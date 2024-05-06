@@ -1,3 +1,5 @@
+import gymnasium as gym
+
 from maps import *
 
 # Map
@@ -25,3 +27,11 @@ ELITE_PERCENTAGE = 0.05  # 5% of the population
 
 # Maze rendering
 RENDER_MODE = "human"
+
+# Environment
+ENV = gym.make(
+    "FrozenLake-v1",
+    desc=MAP,
+    is_slippery=False,
+    render_mode=RENDER_MODE,
+)
