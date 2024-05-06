@@ -2,9 +2,11 @@ from typing import List
 
 from constants import *
 from crossover import one_point_crossover, should_crossover
+from elitilism import elitilist_survivors
 from individual import Individual
 from maps import *
 from mutation import mutate, should_mutate
+from tournament import tournament
 
 # Representation:
 # - North: 0
@@ -68,14 +70,12 @@ def main():
         new_population = []
 
         for _ in range(POPULATION_SIZE):
-            # TODO: tournament selection
-            new_individual = population[0]
+            new_individual = tournament(population)
 
             if should_crossover():
                 # parent selection
-                # TODO: tournament selection
-                parent1 = population[0]
-                parent2 = population[1]
+                parent1 = tournament(population)
+                parent2 = tournament(population)
                 new_individual = one_point_crossover(parent1, parent2)
 
             if should_mutate():
@@ -83,9 +83,8 @@ def main():
 
             new_population.append(new_individual)
 
-        # TODO: Survivor selection
-        # population = survivor_selection(population, new_population)
-        population = new_population
+        # Survivor selection
+        population = elitilist_survivors(population, new_population)
 
     ENV.close()
 
