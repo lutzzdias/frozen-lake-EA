@@ -14,7 +14,7 @@ class Individual:
         # current position of the agent
         self.phenotype = []
         # fitness value of the individual
-        self.fitness = 0
+        self.fitness = 0.0
 
     def __str__(self):
         return f"Genotype: {self.genotype}\nPhenotype: {self.phenotype}\nFitness: {self.fitness}"
@@ -47,10 +47,20 @@ class Individual:
         target = (MAP_SIZE**2) - 1
         agent = observation
 
-        if reward == 1:  # Agent reached the goal
-            fitness = 100 - len(self.genotype)
-        else:  # Agent did not reach the goal
-            fitness = (self.manhattan_distance(agent, target) * 2) - len(self.genotype)
+        distance = 1 / (self.manhattan_distance(agent, target) + 1)
+
+        optimal_size = self.manhattan_distance(0, target)
+        size = 1 / (len(self.genotype) / optimal_size)
+
+        distance_weight = 0.35 if reward else 1
+        size_weight = 0.2 if reward else 0
+        reward_weight = 0.45 if reward else 0
+
+        fitness = (
+            (distance * distance_weight)
+            + (size * size_weight)
+            + (reward * reward_weight)
+        )
 
         self.fitness = fitness
 

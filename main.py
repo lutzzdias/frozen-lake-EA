@@ -83,7 +83,10 @@ def main():
 
         # Survivor selection
         population = elitilist_survivors(population, new_population)
-    print(population[0])
+
+    population = rank(population)
+    best = population[0]
+    print(best)
 
     ENV.close()
 

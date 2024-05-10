@@ -3,7 +3,7 @@ import gymnasium as gym
 from maps import *
 
 # Map
-MAP = map_4_by_4
+MAP = map_8_by_8
 MAP_SIZE = 4
 
 # Number of generations
@@ -26,7 +26,7 @@ TOURNAMENT_SIZE = 5
 ELITE_PERCENTAGE = 0.05  # 5% of the population
 
 # Maze rendering
-RENDER_MODE = None  # "human"
+RENDER_MODE = "human"
 
 # Environment
 ENV = gym.make(
