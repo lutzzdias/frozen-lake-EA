@@ -14,8 +14,8 @@ MAX_ITERATIONS_12X12 = 500
 # Number of individuals
 POPULATION_SIZE = 100
 
-# Genotype max size
-GENOTYPE_MAX_SIZE = 50
+# Genotype size
+GENOTYPE_SIZE = MAP_SIZE * MAP_SIZE
 
 # Variation probabilities
 CROSSOVER_PROBABILITY = 0.8
@@ -26,13 +26,12 @@ TOURNAMENT_SIZE = 5
 ELITE_PERCENTAGE = 0.05  # 5% of the population
 
 # Maze rendering
-RENDER_MODE = "human"
+RENDER_MODE = None  # "human"
 
 # Environment
 ENV = gym.make(
     "FrozenLake-v1",
     desc=MAP,
     is_slippery=False,
-    render_mode=None,
-    # render_mode=RENDER_MODE,
+    render_mode=RENDER_MODE,
 )
