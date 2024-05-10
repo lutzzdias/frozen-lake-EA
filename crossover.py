@@ -8,19 +8,19 @@ def should_crossover():
     return random.random() < CROSSOVER_PROBABILITY
 
 
-def one_point_crossover(parent1: Individual, parent2: Individual) -> Individual:
-    cut_point = random.randint(0, len(parent1.genotype) - 1)
-    genotype = []
+def crossover(parent1: Individual, parent2: Individual) -> Individual:
+    smallest_genotype_length = min(len(parent1.genotype), len(parent2.genotype))
+    cut_point = random.randint(0, (smallest_genotype_length - 1))
 
-    for i in range(len(parent1.genotype)):
-        if i < cut_point:
-            gene_index = i % len(parent1.genotype)
-            genotype.append(parent1.genotype[gene_index])
-        else:
-            gene_index = i % len(parent2.genotype)
-            genotype.append(parent2.genotype[gene_index])
+    child1_genotype = parent1.genotype[:cut_point] + parent2.genotype[cut_point:]
+    child2_genotype = parent2.genotype[:cut_point] + parent1.genotype[cut_point:]
 
-    result = Individual(genotype=genotype)
-    result.traverse_maze(ENV)
+    child1 = Individual(genotype=child1_genotype)
+    child2 = Individual(genotype=child2_genotype)
 
-    return result
+    # recalculate fitness
+    child1.traverse_maze(ENV)
+    child2.traverse_maze(ENV)
+
+    # return only the child with the highest fitness
+    return max(child1, child2, key=lambda child: child.fitness)
