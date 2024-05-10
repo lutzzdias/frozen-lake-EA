@@ -1,7 +1,7 @@
 import random
-from typing import List, Set
+from typing import List
 
-from constants import GENOTYPE_SIZE, MAP_SIZE, MAX_ROUTE_LENGTH
+from constants import GENOTYPE_SIZE, MAP_SIZE
 
 # TODO: Check if this is useful
 # observation, info = env.reset(seed=42)
@@ -12,7 +12,7 @@ class Individual:
         # list of decisions the agent took
         self.genotype = self.initialize_genotype() if genotype is None else genotype
         # current position of the agent
-        self.phenotype = 0
+        self.phenotype = []
         # fitness value of the individual
         self.fitness = 0
 
@@ -59,7 +59,7 @@ class Individual:
     def traverse_maze(self, env):
         observation, reward, terminated = 0, 0, 0
         action_history = []
-        position_history = []
+        position_history = [0]
 
         env.reset()
         for action in self.genotype:
