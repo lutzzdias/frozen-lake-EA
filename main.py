@@ -1,7 +1,7 @@
 from typing import List
 
 from constants import *
-from crossover import one_point_crossover, should_crossover
+from crossover import crossover, should_crossover
 from elitilism import elitilist_survivors
 from individual import Individual
 from maps import *
@@ -50,16 +50,14 @@ def rank(population) -> List[Individual]:
     will be in the beginning of the list
     """
 
-    population.sort(key=lambda individual: individual.fitness_value, reverse=True)
+    population.sort(key=lambda individual: individual.fitness, reverse=True)
     return population
 
 
 def main():
     population = initialize_population()
 
-    for gen in range(MAX_ITERATIONS_4X4):
-        print(gen)
-
+    for _ in range(MAX_ITERATIONS_4X4):
         for individual in population:
             individual.traverse_maze(ENV)
 
@@ -76,7 +74,7 @@ def main():
                 # parent selection
                 parent1 = tournament(population)
                 parent2 = tournament(population)
-                new_individual = one_point_crossover(parent1, parent2)
+                new_individual = crossover(parent1, parent2)
 
             if should_mutate():
                 new_individual = mutate(new_individual)
