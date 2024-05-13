@@ -3,9 +3,6 @@ from typing import List
 
 from constants import GENOTYPE_SIZE, MAP_SIZE
 
-# TODO: Check if this is useful
-# observation, info = env.reset(seed=42)
-
 
 class Individual:
     def __init__(self, genotype=None):
@@ -37,23 +34,25 @@ class Individual:
 
     def calculate_fitness(
         self,
-        observation,
         reward,
-        terminated,
     ) -> float:
         """
         Calculate the fitness of an individual based on its genotype and simulation results.
         """
         target = (MAP_SIZE**2) - 1
-        agent = observation
+        agent_closest_position = max(self.phenotype)
 
-        distance = 1 / (self.manhattan_distance(agent, target) + 1)
+        distance = 1 / (self.manhattan_distance(agent_closest_position, target) + 1)
 
         optimal_size = self.manhattan_distance(0, target)
-        size = 1 / (len(self.genotype) / optimal_size)
+        size = (
+            1 / (len(self.genotype) / optimal_size)
+            if len(self.genotype) >= optimal_size
+            else 0
+        )
 
-        distance_weight = 0.35 if reward else 1
-        size_weight = 0.2 if reward else 0
+        distance_weight = 0.3 if reward else 0.85
+        size_weight = 0.25 if reward else 0.15
         reward_weight = 0.45 if reward else 0
 
         fitness = (
@@ -87,4 +86,4 @@ class Individual:
         self.genotype = action_history
         self.phenotype = position_history
 
-        return self.calculate_fitness(observation, reward, terminated)
+        return self.calculate_fitness(reward)
