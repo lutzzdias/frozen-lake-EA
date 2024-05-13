@@ -57,7 +57,7 @@ def rank(population) -> List[Individual]:
 def main():
     population = initialize_population()
 
-    for _ in range(MAX_ITERATIONS_4X4):
+    for _ in range(GENERATIONS):
         for individual in population:
             individual.traverse_maze(ENV)
 
@@ -84,6 +84,7 @@ def main():
         # Survivor selection
         population = elitilist_survivors(population, new_population)
 
+    print("\n")
     population = rank(population)
     best = population[0]
     print(best)
