@@ -9,18 +9,17 @@ def should_crossover():
 
 
 def crossover(parent1: Individual, parent2: Individual) -> Individual:
-    smallest_genotype_length = min(len(parent1.genotype), len(parent2.genotype))
-    cut_point = random.randint(0, (smallest_genotype_length - 1))
+    shorter_parent = min(parent1, parent2, key=lambda i: len(i.genotype))
+    longer_parent = max(parent1, parent2, key=lambda i: len(i.genotype))
 
-    child1_genotype = parent1.genotype[:cut_point] + parent2.genotype[cut_point:]
-    child2_genotype = parent2.genotype[:cut_point] + parent1.genotype[cut_point:]
+    cut_point = random.randint(0, (len(shorter_parent.genotype) - 1))
 
-    child1 = Individual(genotype=child1_genotype)
-    child2 = Individual(genotype=child2_genotype)
+    child_genotype = (
+        shorter_parent.genotype[:cut_point] + longer_parent.genotype[cut_point:]
+    )
+    child = Individual(genotype=child_genotype)
 
     # recalculate fitness
-    child1.traverse_maze(ENV)
-    child2.traverse_maze(ENV)
+    child.traverse_maze(ENV)
 
-    # return only the child with the highest fitness
-    return max(child1, child2, key=lambda child: child.fitness)
+    return child
