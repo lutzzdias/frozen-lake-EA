@@ -1,95 +1,23 @@
-from typing import List
-
-from constants import *
-from crossover import crossover, should_crossover
-from elitilism import elitilist_survivors
-from individual import Individual
-from maps import *
-from mutation import mutate, should_mutate
-from tournament import tournament
-
-# Representation:
-# - North: 0
-# - South: 1
-# - East: 2
-# - West: 3
-
-# genotype_example = [0, 3, 2, 2, 1, 0, 3]
-
-# Mutation:
-# 1. append random decision
-# 2. delete random decision
-# 3. change random decision
-
-# Cross-over:
-# Single point crossover
-
-# Fitness:
-# Goal was reached or not. If it failed, how close to the goal was the agent.
-# How many steps were taken before the end.
-
-# Parent Selection:
-# Tournament
-
-# Survivor Selection:
-# Elitilism
-
-
-def initialize_population() -> List[Individual]:
-    population = []
-
-    for _ in range(POPULATION_SIZE):
-        population.append(Individual())
-
-    return population
-
-
-def rank(population) -> List[Individual]:
-    """
-    Sorts the population based on their fitness, the highest fitness individuals
-    will be in the beginning of the list
-    """
-
-    population.sort(key=lambda individual: individual.fitness, reverse=True)
-    return population
+from evolutionary_algorithm import evolutionary_algorithm
+from util import histogram
 
 
 def main():
-    population = initialize_population()
+    bests = []
 
-    for _ in range(GENERATIONS):
-        for individual in population:
-            individual.traverse_maze(ENV)
+    for _ in range(30):
+        # list of lists, each list contains the individuals of a generation
+        data = evolutionary_algorithm()
 
-        # order population by fitness
-        population = rank(population)
+        last_generation = data[-1]
+        best_individual = last_generation[0]
+        bests.append(best_individual)
 
-        # initialize next population
-        new_population = []
+    avg_fitness = sum([i.fitness for i in bests]) / len(bests)
 
-        for _ in range(POPULATION_SIZE):
-            new_individual = tournament(population)
+    steps = [len(i.phenotype) for i in bests]
 
-            if should_crossover():
-                # parent selection
-                parent1 = tournament(population)
-                parent2 = tournament(population)
-                new_individual = crossover(parent1, parent2)
-
-            if should_mutate():
-                new_individual = mutate(new_individual)
-
-            new_population.append(new_individual)
-
-        # Survivor selection
-        population = elitilist_survivors(population, new_population)
-
-    print("\n")
-    population = rank(population)
-    best = population[0]
-    print(best)
-
-    ENV.close()
+    histogram(steps, "Path size", "Path size", "Ocurrence")
 
 
 if __name__ == "__main__":
